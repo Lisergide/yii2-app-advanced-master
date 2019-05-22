@@ -18,17 +18,17 @@ class FirstCest
     public function tryToTest(FunctionalTester $I, \Codeception\Example $data)
     {
         $I->amOnPage($data['url']);
-        $I->see($data['h1'], 'h1');
+        $I->see($data['li.active>a'], 'li.active>a');
     }
 
     protected function pageProvider()
     {
         return [
-            ['url' => '/', 'h1' => 'Congratulations!'],
-            ['url' => 'site/about', 'h1' => 'About'],
-            ['url' => 'site/contact', 'h1' => 'Contact'],
-            ['url' => 'site/signup', 'h1' => 'Signup'],
-            ['url' => 'site/login', 'h1' => 'Login'],
+            ['url' => '/', 'li.active>a' => 'Home'],
+            ['url' => 'site/about', 'li.active>a' => 'About'],
+            ['url' => 'site/contact', 'li.active>a' => 'Contact'],
+            ['url' => 'site/signup', 'li.active>a' => 'Signup'],
+            ['url' => 'site/login', 'li.active>a' => 'Login'],
         ];
     }
 }
