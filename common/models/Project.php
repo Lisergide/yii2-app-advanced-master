@@ -22,9 +22,13 @@ use yii\behaviors\TimestampBehavior;
  * @property User $updater
  * @property ProjectUser[] $projectUsers
  * @mixin TimestampBehavior
+ *
+ * @property Task[] $projectTasks
  */
 class Project extends \yii\db\ActiveRecord
 {
+
+    const RELATION_TASKS_PROJECT_ID = 'projectTasks';
     /**
      * {@inheritdoc}
      */
@@ -39,7 +43,7 @@ class Project extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'description', 'creator_id', 'created_at'], 'required'],
+            [['title', 'description'], 'required'],
             [['description'], 'string'],
             [['active', 'creator_id', 'updater_id', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 255],
@@ -54,9 +58,8 @@ class Project extends \yii\db\ActiveRecord
             [
                 'class' => TimestampBehavior::class,
                 'createdAtAttribute' => 'created_at',
-                'updatedAtAttribute' => 'updated_at'
+                'updatedAtAttribute' => 'updated_at',
             ],
-
             [
                 'class' => BlameableBehavior::class,
                 'createdByAttribute' => 'creator_id',
@@ -107,6 +110,13 @@ class Project extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectTasks() {
+        return $this->hasMany(Task::class, ['project_id' => 'id']);
+    }
+
+    /**
      * {@inheritdoc}
      * @return \common\models\query\ProjectQuery the active query used by this AR class.
      */
@@ -114,4 +124,6 @@ class Project extends \yii\db\ActiveRecord
     {
         return new \common\models\query\ProjectQuery(get_called_class());
     }
+
+
 }

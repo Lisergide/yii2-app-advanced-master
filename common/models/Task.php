@@ -25,9 +25,14 @@ use yii\behaviors\TimestampBehavior;
  * @property User $executor
  * @property User $updater
  * @mixin TimestampBehavior
+ *
+ * @property Project[]
  */
 class Task extends \yii\db\ActiveRecord
 {
+
+    const RELATION_TASKS_PROJECT = 'project';
+
     /**
      * {@inheritdoc}
      */
@@ -42,7 +47,7 @@ class Task extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'description', 'creator_id', 'created_at'], 'required'],
+            [['title', 'description'], 'required'],
             [['description'], 'string'],
             [['project_id', 'executor_id', 'started_at', 'completed_at', 'creator_id', 'updater_id', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 255],
@@ -58,9 +63,8 @@ class Task extends \yii\db\ActiveRecord
             [
                 'class' => TimestampBehavior::class,
                 'createdAtAttribute' => 'created_at',
-                'updatedAtAttribute' => 'updated_at'
+                'updatedAtAttribute' => 'updated_at',
             ],
-
             [
                 'class' => BlameableBehavior::class,
                 'createdByAttribute' => 'creator_id',
@@ -111,6 +115,13 @@ class Task extends \yii\db\ActiveRecord
     public function getUpdater()
     {
         return $this->hasOne(User::className(), ['id' => 'updater_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProject() {
+        return $this->hasOne(Project::className(), ['id' => 'project_id']);
     }
 
     /**

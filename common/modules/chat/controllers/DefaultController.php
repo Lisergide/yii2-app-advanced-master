@@ -26,6 +26,12 @@ class DefaultController extends Controller
             Yii::$app->params['chat.port']
         );
         echo 'Server start'.PHP_EOL;
+
+        // loop для поддержания коннекта к БД
+        $server->loop->addPeriodicTimer(2, function (){
+           echo date('H:i:s').PHP_EOL;
+        });
+
         $server->run();
         echo 'Server end';
     }

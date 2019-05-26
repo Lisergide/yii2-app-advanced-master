@@ -1,6 +1,6 @@
 <?php
 
-namespace common\modules\chat\widgets\assets;
+namespace common\modules\chat\widgets;
 
 use yii\web\AssetBundle;
 
@@ -9,8 +9,9 @@ use yii\web\AssetBundle;
  */
 class ChatAsset extends AssetBundle
 {
-    public $basePath = '@webroot';
-    public $baseUrl = '@web';
+//    public $basePath = '@webroot';
+//    public $baseUrl = '@web';
+    public $sourcePath = '@common/modules/chat/widgets/assets';
     public $css = [
         'css/chat.css',
     ];
