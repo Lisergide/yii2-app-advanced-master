@@ -14,6 +14,9 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'user' => [
             'identityClass' => 'common\models\User',
@@ -36,14 +39,21 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
+        // Раскомментировать urlManager в main.php фронта и бэка
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/user'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/task'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/project'],
             ],
         ],
-        */
+    ],
+    'modules' => [
+        'api' => [
+            'class' => 'frontend\modules\api\Module',
+        ],
     ],
     'params' => $params,
 ];

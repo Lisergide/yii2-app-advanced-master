@@ -1,0 +1,11 @@
+.msg_wrapper {
+    width: 1100px;
+}
+#chatMessages {
+    border-radius: 10px;
+}
+
+#fieldMsg {
+    width: 973px;
+    border-radius: 5px;
+}
