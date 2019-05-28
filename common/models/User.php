@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models;
 
 use common\models\search\TaskSearch;
@@ -75,6 +76,47 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getActivedTasks()
+    {
+        return $this->hasMany(Task::class, ['executor_id']);
+
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCreatedTasks()
+    {
+        return $this->hasMany(Task::class, ['creator_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUpdatedTasks()
+    {
+        return $this->hasMany(Task::class, ['updated_at']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCreatedProjects()
+    {
+        return $this->hasMany(Project::class, ['creator_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUpdatedProjects()
+    {
+        return $this->hasMany(Project::class, ['updated_at']);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public static function findIdentity($id)
@@ -125,7 +167,8 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $token verify email token
      * @return static|null
      */
-    public static function findByVerificationToken($token) {
+    public static function findByVerificationToken($token)
+    {
         return static::findOne([
             'verification_token' => $token,
             'status' => self::STATUS_INACTIVE
@@ -144,7 +187,7 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
 
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }
@@ -222,44 +265,4 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getActivedTasks() {
-        return $this->hasMany(Task::class, ['executor_id']);
-
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCreatedTasks() {
-        return $this->hasMany(Task::class, ['creator_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUpdatedTasks() {
-        return $this->hasMany(Task::class, ['updated_at']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCreatedProjects()
-    {
-        return $this->hasMany(Project::class, ['creator_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUpdatedProjects()
-    {
-        return $this->hasMany(Project::class, ['updated_at']);
-    }
-
-
 }

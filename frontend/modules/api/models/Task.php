@@ -2,6 +2,9 @@
 
 namespace frontend\modules\api\models;
 
+use common\models\Project;
+use yii\helpers\StringHelper;
+
 /**
  * Class Task
  * @package frontend\modules\api\models
@@ -16,13 +19,21 @@ class Task extends \common\models\Task
             'id',
             'title',
             'description_short' => function () {
-            return substr($this->description, 0, 50);
-        },
-            ];
+                return StringHelper::truncate($this->description,50);
+            },
+        ];
     }
 
     public function extraFields()
     {
         return [self::RELATION_TASKS_PROJECT];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProject()
+    {
+        return $this->hasOne(Project::className(), ['id' => 'project_id']);
     }
 }

@@ -13,14 +13,14 @@ use yii\rest\Controller;
  */
 class TaskController extends Controller
 {
-//    public function behaviors()
-//    {
-//        $behaviors = parent::behaviors();
-//        $behaviors['authenticator'] = [
-//            'class' => HttpBasicAuth::className(),
-//        ];
-//        return $behaviors;
-//    }
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => HttpBasicAuth::className(),
+        ];
+        return $behaviors;
+    }
 
     public function actionIndex()
     {
