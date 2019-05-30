@@ -10,6 +10,7 @@
                     ['label' => 'Menu Yii2', 'options' => ['class' => 'header']],
                     ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii']],
                     ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug']],
+                    ['label' => 'User', 'icon' => 'user', 'url' => ['user/index']],
                     ['label' => 'Task', 'icon' => 'address-book', 'url' => ['task/index']],
                     ['label' => 'Project', 'icon' => 'calendar', 'url' => ['project/index']],
                     ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
