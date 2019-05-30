@@ -82,9 +82,9 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'class' => \mohorev\file\UploadImageBehavior::class,
                 'attribute' => 'avatar',
-                'scenarios' => [self::SCENARIO_UPDATE],
+                'scenarios' => [self::SCENARIO_UPDATE, self::SCENARIO_INSERT],
                 'path' => '@frontend/web/upload/user/{id}',
-                'url' => Yii::$app->params['hosts.front'] .
+                'url' =>  Yii::$app->params['hosts.front'] .
                     Yii::getAlias('@web/upload/user/{id}'),
                 'thumbs' => [
                     self::AVATAR_ICO => ['width' => 30, 'height' => 30, 'quality' => 90],
@@ -100,13 +100,13 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'username'], 'required'],
+            [['username', 'email'], 'required'],
             [['avatar'], 'default', 'value' => 'avatar'],
             [['email'], 'email'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => self::STATUSES],
             [['username', 'email', 'password'], 'safe'],
-            ['avatar', 'image', 'extensions' => 'jpg, jpeg, gif, png', 'on' => self::SCENARIO_UPDATE],
+            ['avatar', 'image', 'extensions' => 'jpg, jpeg, gif, png', 'on' => [self::SCENARIO_UPDATE, self::SCENARIO_INSERT]],
         ];
     }
 

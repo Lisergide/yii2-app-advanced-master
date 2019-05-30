@@ -29,7 +29,7 @@ use yii\bootstrap\ActiveForm;
         ->label('Avatar<br>' . Html::img($model->getThumbUploadUrl('avatar', \common\models\User::AVATAR_PREVIEW))) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success m_left']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

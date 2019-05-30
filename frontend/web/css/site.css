@@ -36,6 +36,10 @@ body {
     font-style: italic;
 }
 
+.m_left {
+    margin-left: 210px;
+}
+
 /* add sorting icons to gridview sort links */
 a.asc:after, a.desc:after {
     position: relative;
@@ -118,3 +122,5 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+

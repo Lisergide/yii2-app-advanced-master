@@ -34,7 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'status',
                 'filter' => \common\models\User::STATUS_LABELS
-
             ],
             'created_at:datetime',
             'updated_at:datetime',

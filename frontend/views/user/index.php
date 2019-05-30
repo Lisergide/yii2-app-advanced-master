@@ -28,15 +28,19 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'username',
-            'auth_key',
-            'access_token',
-            'password_hash',
+//            'auth_key',
+//            'access_token',
+//            'password_hash',
             //'password_reset_token',
-            //'email:email',
+            'email:email',
             //'avatar',
+          [
+            'attribute' => 'status',
+            'filter' => \common\models\User::STATUS_LABELS
+          ],
             //'status',
-            //'created_at',
-            //'updated_at',
+            'created_at:datetime',
+            'updated_at:datetime',
             //'verification_token',
 
             ['class' => 'yii\grid\ActionColumn'],
