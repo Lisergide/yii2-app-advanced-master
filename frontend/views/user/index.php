@@ -1,5 +1,6 @@
 <?php
 
+use common\models\User;
 use yii\helpers\Html;
 use yii\grid\GridView;
 
@@ -28,15 +29,22 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'username',
-            'auth_key',
-            'access_token',
-            'password_hash',
+//            'auth_key',
+//            'access_token',
+//            'password_hash',
             //'password_reset_token',
             //'email:email',
             //'avatar',
-            //'status',
-            //'created_at',
-            //'updated_at',
+
+            [
+                'attribute' => 'status',
+                'filter' => \common\models\User::STATUS_LABELS,
+                'value' => function (common\models\User $model) {
+                    return \common\models\User::STATUS_LABELS[$model->status];
+                }
+            ],
+            'created_at:datetime',
+            'updated_at:datetime',
             //'verification_token',
 
             ['class' => 'yii\grid\ActionColumn'],

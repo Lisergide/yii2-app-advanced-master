@@ -33,7 +33,10 @@ $this->params['breadcrumbs'][] = $this->title;
             //'avatar',
             [
                 'attribute' => 'status',
-                'filter' => \common\models\User::STATUS_LABELS
+                'filter' => \common\models\User::STATUS_LABELS,
+                'value' => function (common\models\User $model) {
+                    return \common\models\User::STATUS_LABELS[$model->status];
+                }
 
             ],
             'created_at:datetime',

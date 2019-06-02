@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\search\TaskSearch;
+use mohorev\file\UploadImageBehavior;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -31,6 +32,7 @@ use yii\web\IdentityInterface;
  * @property Project[] $createdProjects;
  * @property Project[] $updatedProjects;
  *
+ * @property ProjectUser[] $projectUsers
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -63,6 +65,8 @@ class User extends ActiveRecord implements IdentityInterface
     const RELATION_PROJECTS_CREATOR_ID = 'createdProjects';
     const RELATION_PROJECTS_UPDATER_ID = 'updatedProjects';
 
+    const RELATION_PROJECT_USERS = 'projectUsers';
+
 
     /**
      * {@inheritdoc}
@@ -80,9 +84,9 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             TimestampBehavior::className(),
             [
-                'class' => \mohorev\file\UploadImageBehavior::class,
+                'class' => UploadImageBehavior::class,
                 'attribute' => 'avatar',
-                'scenarios' => [self::SCENARIO_UPDATE],
+                'scenarios' => [self::SCENARIO_UPDATE, self::SCENARIO_INSERT],
                 'path' => '@frontend/web/upload/user/{id}',
                 'url' => Yii::$app->params['hosts.front'] .
                     Yii::getAlias('@web/upload/user/{id}'),
@@ -106,7 +110,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => self::STATUSES],
             [['username', 'email', 'password'], 'safe'],
-            ['avatar', 'image', 'extensions' => 'jpg, jpeg, gif, png', 'on' => self::SCENARIO_UPDATE],
+            ['avatar', 'image', 'extensions' => 'jpg, jpeg, gif, png', 'on' => [self::SCENARIO_UPDATE, self::SCENARIO_INSERT]],
         ];
     }
 
@@ -115,7 +119,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getActivedTasks()
     {
-        return $this->hasMany(Task::class, ['executor_id']);
+        return $this->hasMany(Task::class, ['executor_id' => 'id']);
 
     }
 
@@ -124,7 +128,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getCreatedTasks()
     {
-        return $this->hasMany(Task::class, ['creator_id']);
+        return $this->hasMany(Task::class, ['creator_id' => 'id']);
     }
 
     /**
@@ -132,7 +136,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getUpdatedTasks()
     {
-        return $this->hasMany(Task::class, ['updated_at']);
+        return $this->hasMany(Task::class, ['updated_at' => 'id']);
     }
 
     /**
@@ -140,7 +144,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getCreatedProjects()
     {
-        return $this->hasMany(Project::class, ['creator_id']);
+        return $this->hasMany(Project::class, ['creator_id' => 'id']);
     }
 
     /**
@@ -148,7 +152,15 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getUpdatedProjects()
     {
-        return $this->hasMany(Project::class, ['updated_at']);
+        return $this->hasMany(Project::class, ['updated_at' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectUsers()
+    {
+        return $this->hasMany(ProjectUser::class, ['user_id' => 'id']);
     }
 
     /**
