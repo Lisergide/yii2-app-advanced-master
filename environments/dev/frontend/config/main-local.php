@@ -9,16 +9,20 @@ $config = [
     ],
 ];
 
+// Включить дебаг панель и gii в main-local.php папки environments\dev для бэка и фронта (добавив 'allowedIPs' => ['*']
+// в массив после 'class' => )
 if (!YII_ENV_TEST) {
     // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
+        'allowedIPs' => ['*']
     ];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
+        'allowedIPs' => ['*']
     ];
 }
 
