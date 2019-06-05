@@ -6,7 +6,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model common\models\Project */
 /* @var $form yii\widgets\ActiveForm */
-/* @var $user_id \backend\controllers\ProjectController */
+/* @var [] $user_id */
 ?>
 
 <div class="project-form">
