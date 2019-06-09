@@ -98,6 +98,7 @@ class Project extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'title' => 'Title',
+            'role' => 'Role',
             'description' => 'Description',
             'active' => 'Active',
             'creator_id' => 'Creator ID',

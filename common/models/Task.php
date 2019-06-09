@@ -27,6 +27,7 @@ use yii\behaviors\TimestampBehavior;
  * @mixin TimestampBehavior
  *
  * @property Project[]
+ * @property mixed project
  */
 class Task extends \yii\db\ActiveRecord
 {

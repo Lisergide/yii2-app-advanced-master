@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\query\TaskQuery;
 use Yii;
 use common\models\Task;
 use common\models\search\TaskSearch;
@@ -48,6 +49,10 @@ class TaskController extends Controller
     {
         $searchModel = new TaskSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        /* @var $query TaskQuery*/
+        $query = $dataProvider->query;
+        $query->byUser(Yii::$app->user->id);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -105,6 +110,29 @@ class TaskController extends Controller
             'model' => $model,
         ]);
     }
+
+    /**
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionTake($id)
+    {
+        $model = $this->findModel($id);
+        $model->executor_id = Yii::$app->user->id;
+        $model->started_at = time();
+
+        if ($model->save()) {
+            Yii::$app->session->setFlash('success', 'Успешно взяли');
+
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
 
     /**
      * Deletes an existing Task model.

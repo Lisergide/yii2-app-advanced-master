@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\TaskSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -25,22 +26,48 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            'project.title',
             'title',
             'description:ntext',
-            'project_id',
-            'executor_id',
-            //'started_at',
-            //'completed_at',
-            //'creator_id',
-            //'updater_id',
-            //'created_at',
-            //'updated_at',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            'executor.username',
+            'started_at:datetime',
+            'completed_at:datetime',
+            'creator.username',
+            'updater.username',
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
+        /*[
+            'class' => 'yii\grid\ActionColumn',
+            'template' => '{view} {update} {delete} {take}',
+            'buttons' => [
+                'take' => function ($url, \common\models\Task $model, $key) {
+                    $icon = \yii\bootstrap\Html::icon('hand-right');
+                    return Html::a($icon, ['task/take', 'id' => $model->id], ['data' => [
+                        'confirm' => 'Берете задачу?',
+                        'method' => 'post',
+                    ],]);
+                },
+            ],
+            'visibleButtons' => [
+                'update' =>
+                    function (\common\models\Task $model, $key, $index) {
+                        return Yii::$app->projectService->hasRole($model->project, Yii::$app->user->identity,
+                            \common\models\ProjectUser::ROLE_MANAGER);
+                    },
+                'delete' =>
+                    function (\common\models\Task $model, $key, $index) {
+                        return Yii::$app->projectService->hasRole($model->project, Yii::$app->user->identity,
+                            \common\models\ProjectUser::ROLE_MANAGER);
+                    },
+                'take' =>
+                    function (\common\models\Task $model, $key, $index) {
+                        return Yii::$app->projectService->hasRole($model->project, Yii::$app->user->identity,
+                            \common\models\ProjectUser::ROLE_DEVELOPER);
+                    },
+            ]
+        ],*/
     ]); ?>
 
     <?php Pjax::end(); ?>
