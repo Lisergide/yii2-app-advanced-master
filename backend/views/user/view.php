@@ -17,65 +17,69 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= Html::img($model->getThumbUploadUrl('avatar', \common\models\User::AVATAR_PREVIEW), ['style' => 'margin-bottom: 10px;']) ?>
+  <?= Html::img($model->getThumbUploadUrl('avatar', \common\models\User::AVATAR_PREVIEW), ['style' => 'margin-bottom: 10px;']) ?>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Edit Profile', ['profile', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
+      <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+      <?= Html::a('Edit Profile', ['profile', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
+      <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        'class' => 'btn btn-danger',
+        'data' => [
+          'confirm' => 'Are you sure you want to delete this item?',
+          'method' => 'post',
+        ],
+      ]) ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'username',
-            'auth_key',
-            'access_token',
-            'password_hash',
-            'password_reset_token',
-            'email:email',
-            'avatar',
-            [
-                'attribute' => 'status',
-                'value' => function (common\models\User $model) {
-                    return \common\models\User::STATUS_LABELS[$model->status];
-                }
-            ],
-            'created_at:datetime',
-            'updated_at:datetime',
-            'verification_token',
-        ],
-    ]) ?>
+  <?= DetailView::widget([
+    'model' => $model,
+    'attributes' => [
+      'id',
+      'username',
+      'auth_key',
+      'access_token',
+      'password_hash',
+      'password_reset_token',
+      'email:email',
+      'avatar',
+      [
+        'attribute' => 'status',
+        'value' => function (common\models\User $model) {
+          return \common\models\User::STATUS_LABELS[$model->status];
+        }
+      ],
+      'created_at:datetime',
+      'updated_at:datetime',
+      'verification_token',
+    ],
+  ]) ?>
 
-    <?= GridView::widget(
+  <?= GridView::widget(
+    [
+      'dataProvider' => $dataProvider,
+      'columns' =>
         [
-            'dataProvider' => $dataProvider,
-            'columns' =>
-                [
-                    [
-                        'label' => 'Project',
-                        'format' => 'html',
-                        'value' => function (\common\models\ProjectUser $model) {
-                            return Html::a($model->project->title, ['project/view/', 'id' => $model->project_id]);
-                        }
+          [
+            'label' => 'Project',
+            'format' => 'html',
+            'value' => function (\common\models\ProjectUser $model) {
+              return Html::a($model->project->title, ['project/view/', 'id' => $model->project_id]);
+            }
 
-                    ],
-                    [
-                        'label' => 'Role',
-                        'value' => function (\common\models\ProjectUser $model) {
-                            return $model->role;
-                        }
-                    ],
+          ],
+          [
+            'label' => 'Role',
+            'value' => function (\common\models\ProjectUser $model) {
+              return $model->role;
+            }
+          ],
 
-                ],
-            'summary' => false,
-        ]); ?>
+        ],
+      'summary' => false,
+    ]); ?>
+
+  <?php echo \yii2mod\comments\widgets\Comment::widget([
+    'model' => $model,
+  ]); ?>
 
 </div>

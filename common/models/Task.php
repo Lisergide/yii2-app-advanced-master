@@ -27,110 +27,110 @@ use yii\behaviors\TimestampBehavior;
  * @mixin TimestampBehavior
  *
  * @property Project[]
- * @property mixed project
+ * @property Project $project
  */
-class Task extends \yii\db\ActiveRecord
-{
+class Task extends \yii\db\ActiveRecord {
 
-    const RELATION_TASKS_PROJECT = 'project';
+  const RELATION_TASKS_PROJECT = 'project';
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'task';
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public static function tableName() {
+    return 'task';
+  }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['title', 'description'], 'required'],
-            [['description'], 'string'],
-            [['project_id', 'executor_id', 'started_at', 'completed_at', 'creator_id', 'updater_id', 'created_at', 'updated_at'], 'integer'],
-            [['title'], 'string', 'max' => 255],
-            [['creator_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['creator_id' => 'id']],
-            [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['executor_id' => 'id']],
-            [['updater_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updater_id' => 'id']],
-        ];
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public function rules() {
+    return [
+      [['title', 'description'], 'required'],
+      [['description'], 'string'],
+      [['project_id', 'executor_id', 'started_at', 'completed_at', 'creator_id', 'updater_id', 'created_at', 'updated_at'], 'integer'],
+      [['title'], 'string', 'max' => 255],
+      [['creator_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['creator_id' => 'id']],
+      [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['executor_id' => 'id']],
+      [['updater_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updater_id' => 'id']],
+    ];
+  }
 
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => TimestampBehavior::class,
-                'createdAtAttribute' => 'created_at',
-                'updatedAtAttribute' => 'updated_at',
-            ],
-            [
-                'class' => BlameableBehavior::class,
-                'createdByAttribute' => 'creator_id',
-                'updatedByAttribute' => 'updater_id',
-            ]
-        ];
-    }
+  public function behaviors() {
+    return [
+      [
+        'class' => TimestampBehavior::class,
+        'createdAtAttribute' => 'created_at',
+        'updatedAtAttribute' => 'updated_at',
+      ],
+      [
+        'class' => BlameableBehavior::class,
+        'createdByAttribute' => 'creator_id',
+        'updatedByAttribute' => 'updater_id',
+      ]
+    ];
+  }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'title' => 'Title',
-            'description' => 'Description',
-            'project_id' => 'Project ID',
-            'executor_id' => 'Executor ID',
-            'started_at' => 'Started At',
-            'completed_at' => 'Completed At',
-            'creator_id' => 'Creator ID',
-            'updater_id' => 'Updater ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-        ];
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public function attributeLabels() {
+    return [
+      'id' => 'ID',
+      'title' => 'Title',
+      'description' => 'Description',
+      'project_id' => 'Project ID',
+      'executor_id' => 'Executor ID',
+      'started_at' => 'Started At',
+      'completed_at' => 'Completed At',
+      'creator_id' => 'Creator ID',
+      'updater_id' => 'Updater ID',
+      'created_at' => 'Created At',
+      'updated_at' => 'Updated At',
+    ];
+  }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCreator()
-    {
-        return $this->hasOne(User::className(), ['id' => 'creator_id']);
-    }
+  /**
+   * @return \yii\db\ActiveQuery
+   */
+  public function getCreator() {
+    return $this->hasOne(User::className(), ['id' => 'creator_id']);
+  }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getExecutor()
-    {
-        return $this->hasOne(User::className(), ['id' => 'executor_id']);
-    }
+  /**
+   * @return \yii\db\ActiveQuery
+   */
+  public function getExecutor() {
+    return $this->hasOne(User::className(), ['id' => 'executor_id']);
+  }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUpdater()
-    {
-        return $this->hasOne(User::className(), ['id' => 'updater_id']);
-    }
+  /**
+   * @return \yii\db\ActiveQuery
+   */
+  public function getUpdater() {
+    return $this->hasOne(User::className(), ['id' => 'updater_id']);
+  }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProject() {
-        return $this->hasOne(Project::className(), ['id' => 'project_id']);
-    }
+  /**
+   * @return \yii\db\ActiveQuery
+   */
+  public function getProject() {
+    return $this->hasOne(Project::className(), ['id' => 'project_id']);
+  }
 
-    /**
-     * {@inheritdoc}
-     * @return \common\models\query\TaskQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new \common\models\query\TaskQuery(get_called_class());
-    }
+  /**
+   * {@inheritdoc}
+   * @return \common\models\query\TaskQuery the active query used by this AR class.
+   */
+  public static function find() {
+    return new \common\models\query\TaskQuery(get_called_class());
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getTaskUserRoles() {
+    return $this->project->getProjectUsers()->select('role')->indexBy('user_id')->column();
+  }
+
+
 }

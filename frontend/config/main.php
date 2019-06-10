@@ -66,9 +66,6 @@ return [
         'api' => [
             'class' => 'frontend\modules\api\Module',
         ],
-        'comment' => [
-            'class' => 'yii2mod\comments\Module',
-        ],
     ],
     'params' => $params,
 ];
