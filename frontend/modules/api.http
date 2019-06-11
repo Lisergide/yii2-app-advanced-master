@@ -1,0 +1,73 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection).
+#
+# Following HTTP Request Live Templates are available:
+# * 'gtrp' and 'gtr' create a GET request with or without query parameters;
+# * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
+# * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+
+### Get request with parameter
+
+GET http://y2aa-frontend.test/api/users
+Accept: application/json
+
+###
+
+GET http://y2aa-frontend.test/api/users/1
+Accept: application/json
+
+###
+
+GET http://y2aa-frontend.test/api/tasks
+Accept: application/json
+Authorization: Basic MTIzNDU2Og==
+
+###
+
+GET http://y2aa-frontend.test/api/tasks?expand=project
+Accept: application/json
+Authorization: Basic MTIzNDU2Og==
+
+###
+
+GET http://y2aa-frontend.test/api/projects
+Accept: application/json
+Authorization: Basic MTIzNDU2Og==
+
+###
+
+GET http://y2aa-frontend.test/api/projects?expand=tasks
+Accept: application/json
+Authorization: Basic MTIzNDU2Og==
+
+###
+
+POST http://y2aa-frontend.test/api/projects
+Content-Type: application/json
+Authorization: Basic MTIzNDU2Og==
+
+{
+  "title": "Проект 3",
+  "description": "descr_3 frfrf",
+  "active": 1
+}
+
+###
+
+PUT http://y2aa-frontend.test/api/projects/5
+Content-Type: application/json
+Authorization: Basic MTIzNDU2Og==
+
+{
+  "title": "Проект 4",
+  "description": "descr_3 frfrf33",
+  "active": 1
+}
+
+###
+
+DELETE http://y2aa-frontend.test/api/projects/5
+Authorization: Basic MTIzNDU2Og==
+
+###
+
+
