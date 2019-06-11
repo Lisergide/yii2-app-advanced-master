@@ -6,11 +6,13 @@ use common\models\Project;
 use common\models\ProjectUser;
 use common\models\query\TaskQuery;
 use common\models\User;
+use function foo\func;
 use Yii;
 use common\models\Task;
 use common\models\search\TaskSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -25,11 +27,23 @@ class TaskController extends Controller {
     return [
       'access' => [
         'class' => AccessControl::className(),
+        'denyCallback' => function ($rule, $action) {
+          throw new ForbiddenHttpException('У Вас нет доступа');
+        },
         'rules' => [
           [
-//                        'actions' => ['logout', 'index'],
             'allow' => true,
-            'roles' => ['user'],
+            'roles' => [ProjectUser::ROLE_MANAGER],
+          ],
+          [
+            'allow' => true,
+            'actions' => ['take', 'complete'],
+            'roles' => [ProjectUser::ROLE_DEVELOPER],
+          ],
+          [
+            'allow' => true,
+            'actions' => ['index', 'view'],
+            'roles' => [ProjectUser::ROLE_TESTER],
           ],
         ],
       ],
@@ -50,8 +64,7 @@ class TaskController extends Controller {
     $searchModel = new TaskSearch();
     $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
     $projects = Project::find()->byUser(Yii::$app->user->id)->select('title')->indexBy('id')->column();
-
-    $activeUsers = User::find()->onlyActive()->select('username')->indexBy('id')->column();
+    $activeUsers = User::find()->allUsersByProject(Yii::$app->user->id)->onlyActive()->select('username')->indexBy('id')->column();
 
     /* @var $query TaskQuery */
     $query = $dataProvider->query;
@@ -84,6 +97,7 @@ class TaskController extends Controller {
    */
   public function actionCreate() {
     $model = new Task();
+    $projects = $this->getProjectUserRole();
 
     if ($model->load(Yii::$app->request->post()) && $model->save()) {
       return $this->redirect(['view', 'id' => $model->id]);
@@ -91,6 +105,7 @@ class TaskController extends Controller {
 
     return $this->render('create', [
       'model' => $model,
+      'projects' => $projects
     ]);
   }
 
@@ -103,6 +118,7 @@ class TaskController extends Controller {
    */
   public function actionUpdate($id) {
     $model = $this->findModel($id);
+    $projects = $this->getProjectUserRole();
 
     if ($model->load(Yii::$app->request->post()) && $model->save()) {
       return $this->redirect(['view', 'id' => $model->id]);
@@ -110,6 +126,7 @@ class TaskController extends Controller {
 
     return $this->render('update', [
       'model' => $model,
+      'projects' => $projects
     ]);
   }
 
@@ -121,9 +138,9 @@ class TaskController extends Controller {
   public function actionTake($id) {
     $model = $this->findModel($id);
     $user = Yii::$app->user->identity;
-    $userRoles = $model->getTaskUserRoles();
+    $userRoles = $model->getUserRoles();
     if (Yii::$app->taskService->takeTask($model, $user)) {
-      Yii::$app->session->setFlash('success', 'Вы взяли задачу');
+      Yii::$app->session->setFlash('success', 'Вы взяли задачу в работу.');
       foreach ($userRoles as $userId => $role) {
         if ($role === ProjectUser::ROLE_MANAGER) {
           Yii::$app->taskService->assignTask($model, User::findOne($userId));
@@ -144,10 +161,9 @@ class TaskController extends Controller {
    */
   public function actionComplete($id) {
     $model = $this->findModel($id);
-    $userRoles = $model->getTaskUserRoles();
-
+    $userRoles = $model->getUserRoles();
     if (Yii::$app->taskService->completeTask($model)) {
-      Yii::$app->session->setFlash('success', 'Вы завершили задачу');
+      Yii::$app->session->setFlash('success', 'Вы закончили работу над задачей.');
       foreach ($userRoles as $userId => $role) {
         if ($role === ProjectUser::ROLE_MANAGER || $role === ProjectUser::ROLE_TESTER) {
           Yii::$app->taskService->completeTaskEvent($model, User::findOne($userId));
@@ -188,5 +204,10 @@ class TaskController extends Controller {
     }
 
     throw new NotFoundHttpException('The requested page does not exist.');
+  }
+
+  protected function getProjectUserRole() {
+    return Project::find()->byUser(Yii::$app->user->id, ProjectUser::ROLE_MANAGER)
+      ->select('title')->indexBy('id')->column();
   }
 }

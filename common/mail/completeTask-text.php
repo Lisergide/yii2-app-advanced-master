@@ -9,4 +9,4 @@ use yii\helpers\Html;
 ?>
 Привет <?= Html::encode($user->username) ?>,
 В проекте <?= Html::encode($task->project->title) ?> разработчик <?= $task->executor->username ?>
-Завершил задачу <?= $task->title ?>
+ завершил задачу <?= $task->title ?>

@@ -20,15 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= Html::img($model->getThumbUploadUrl('avatar', \common\models\User::AVATAR_PREVIEW), ['style' => 'margin-bottom: 10px;']) ?>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Edit Profile', ['profile', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
     </p>
 
     <?= DetailView::widget([
@@ -36,10 +28,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'username',
-            'auth_key',
-            'access_token',
-            'password_hash',
-            'password_reset_token',
             'email:email',
             'avatar',
             [
@@ -50,7 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'created_at:datetime',
             'updated_at:datetime',
-            'verification_token',
         ],
     ]) ?>
 

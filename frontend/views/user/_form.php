@@ -19,10 +19,8 @@ use yii\bootstrap\ActiveForm;
     ]); ?>
 
     <?= $form->field($model, 'username')->textInput() ?>
-    <?= $form->field($model, 'email')->textInput() ?>
     <?= $form->field($model, 'password')->passwordInput() ?>
     <?= $form->field($model, 'status')->dropDownList(\common\models\User::STATUS_LABELS) ?>
-
     <?= $form->field($model, 'avatar')
         ->fileInput(['accept' => 'image/*'])
         ->label('Avatar<br>' . Html::img($model->getThumbUploadUrl('avatar', \common\models\User::AVATAR_PREVIEW))) ?>

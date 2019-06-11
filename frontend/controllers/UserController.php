@@ -2,167 +2,97 @@
 
 namespace frontend\controllers;
 
+use common\models\ProjectUser;
 use Yii;
 use common\models\User;
 use frontend\models\search\UserSearch;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * UserController implements the CRUD actions for User model.
  */
-class UserController extends Controller
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-//                        'actions' => ['logout', 'index'],
-                        'allow' => true,
-                        'roles' => ['user'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
+class UserController extends Controller {
+  /**
+   * {@inheritdoc}
+   */
+  public function behaviors() {
+    return [
+      'access' => [
+        'class' => AccessControl::className(),
+        'denyCallback' => function ($rule, $action) {
+          throw new ForbiddenHttpException('У Вас нет доступа');
+        },
+        'rules' => [
+          [
+            'allow' => true,
+            'roles' => [ProjectUser::ROLE_TESTER],
+          ],
+        ],
+      ],
+      'verbs' => [
+        'class' => VerbFilter::className(),
+        'actions' => [
+          'delete' => ['POST'],
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Displays a single User model.
+   * @param integer $id
+   * @return mixed
+   * @throws NotFoundHttpException if the model cannot be found
+   */
+  public function actionView() {
+    $model = $this->findModel(Yii::$app->user->identity->id);
+
+    $query = $model->getProjectUsers();
+    $dataProvider = new ActiveDataProvider([
+      'query' => $query,
+    ]);
+
+    return $this->render('view', [
+      'model' => $model,
+      'dataProvider' => $dataProvider
+    ]);
+  }
+
+  /**
+   * @return mixed
+   * @throws NotFoundHttpException
+   */
+  public function actionProfile() {
+    $model = $this->findModel(Yii::$app->user->identity->id);
+    $model->setScenario(User::SCENARIO_UPDATE);
+
+    if ($model->load(Yii::$app->request->post()) && $model->save()) {
+      return $this->redirect(['view', 'id' => $model->id]);
     }
 
-    /**
-     * Lists all User models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new UserSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    return $this->render('profile', [
+      'model' => $model,
+    ]);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+  }
+
+  /**
+   * Finds the User model based on its primary key value.
+   * If the model is not found, a 404 HTTP exception will be thrown.
+   * @param integer $id
+   * @return User the loaded model
+   * @throws NotFoundHttpException if the model cannot be found
+   */
+  protected function findModel($id) {
+    if (($model = User::findOne($id)) !== null) {
+      return $model;
     }
 
-    /**
-     * Displays a single User model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        $model = $this->findModel($id);
-
-        $query = $model->getProjectUsers();
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-        return $this->render('view', [
-            'model' => $model,
-            'dataProvider' => $dataProvider
-        ]);
-    }
-
-    /**
-     * Creates a new User model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new User();
-        $model->setScenario(User::SCENARIO_INSERT);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing User model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-        $model->setScenario(User::SCENARIO_UPDATE);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * @return mixed
-     * @throws NotFoundHttpException
-     */
-    public function actionProfile()
-    {
-        $model = $this->findModel(Yii::$app->user->identity->id);
-        $model->setScenario(User::SCENARIO_UPDATE);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-
-    }
-
-    /**
-     * Deletes an existing User model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the User model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return User the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = User::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
+    throw new NotFoundHttpException('The requested page does not exist.');
+  }
 }

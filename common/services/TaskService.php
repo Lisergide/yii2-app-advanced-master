@@ -28,10 +28,10 @@ class TaskService extends Component {
    * @param User $user
    */
   public function assignTask(Task $task, User $user) {
-      $event = new AssignTaskEvent();
-      $event->task = $task;
-      $event->user = $user;
-      $this->trigger(self::EVENT_ASSIGN_TASK, $event);
+    $event = new AssignTaskEvent();
+    $event->task = $task;
+    $event->user = $user;
+    $this->trigger(self::EVENT_ASSIGN_TASK, $event);
   }
 
   /**

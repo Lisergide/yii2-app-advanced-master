@@ -10,5 +10,5 @@ use yii\helpers\Html;
 <div>
     <p>Привет <?= Html::encode($user->username) ?>, </p>
     <p>В проекте <?= Html::encode($task->project->title) ?> разработчик <?= $task->executor->username ?> </p>
-    <p>Завершил задачу <?= $task->title ?></p>
+    <p> завершил задачу <?= $task->title ?></p>
 </div>

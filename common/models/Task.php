@@ -32,6 +32,9 @@ use yii\behaviors\TimestampBehavior;
 class Task extends \yii\db\ActiveRecord {
 
   const RELATION_TASKS_PROJECT = 'project';
+  const RELATION_CREATOR = 'creator';
+  const RELATION_EXECUTOR = 'executor';
+  const RELATION_UPDATER = 'updater';
 
   /**
    * {@inheritdoc}
@@ -128,7 +131,7 @@ class Task extends \yii\db\ActiveRecord {
   /**
    * @return mixed
    */
-  public function getTaskUserRoles() {
+  public function getUserRoles() {
     return $this->project->getProjectUsers()->select('role')->indexBy('user_id')->column();
   }
 
